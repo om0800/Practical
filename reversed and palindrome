@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+#define SIZE 100
+ 
+using namespace std;
+ 
+class Stack {
+   char arr[SIZE];
+   int top;
+public:
+   Stack() { top = -1; }
+   void push(char c) { arr[++top] = c; }
+   char pop() { return arr[top--]; }
+   bool isEmpty() { return top == -1; }
+};
+ 
+string reverseString(const string& str) {
+   Stack s;
+   for (char c : str)
+       s.push(c);
+ 
+   string reversed;
+   while (!s.isEmpty())
+       reversed += s.pop();
+   return reversed;
+}
+ 
+bool isPalindrome(const string& str) {
+   string reversed = reverseString(str); 
+   return str == reversed;                   
+}
+ 
+int main() {
+   string str;
+   cout << "Enter a string: ";
+   cin >> str;
+ 
+   cout << "Original String: " << str << "\n";
+   cout << "Reversed String: " << reverseString(str) << "\n";
+ 
+   if (isPalindrome(str))
+       cout << str << " is a palindrome\n";
+   else
+       cout << str << " is not a palindrome\n";
+ 
+   return 0;
+}
