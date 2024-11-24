@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+ 
+struct Node {
+   int data;
+   Node* left;
+   Node* right;
+};
+ 
+Node* createNode(int data) {
+   Node* newNode = new Node();
+   newNode->data = data;
+   newNode->left = newNode->right = nullptr;
+   return newNode;
+}
+ 
+Node* insert(Node* root, int data) {
+   // If the tree is empty, create a new node and return it as the root
+   if (!root) return createNode(data);
+   
+   if (data < root->data)
+       root->left = insert(root->left, data);
+   else
+       root->right = insert(root->right, data);
+   
+   return root; 
+}
+ 
+// Function to perform an in-order traversal (left, root, right)
+void printInOrder(Node* root) {
+   if (!root) return; 
+   
+   // Visit left subtree
+   printInOrder(root->left);
+   
+   // Print root node data (marks)
+   cout << root->data << " ";
+   
+   // Visit right subtree
+   printInOrder(root->right);
+}
+ 
+// Function to find the minimum mark in the BST (leftmost leaf node)
+int findMin(Node* root) {
+   while (root->left) 
+       root = root->left;
+   return root->data; 
+}
+ 
+// Function to find the maximum mark in the BST (rightmost leaf node)
+int findMax(Node* root) {
+   while (root->right) 
+       root = root->right;
+   return root->data; 
+}
+ 
+int main() {
+   Node* root = nullptr;  
+   int choice, value;
+ 
+   do {
+       // Menu for user interaction
+       cout << "\nBinary Search Tree Operations for Student Marks:\n";
+       cout << "1. Insert a new mark\n";
+       cout << "2. Display marks in ascending order (Inorder Traversal)\n";
+       cout << "3. Display the minimum mark\n";
+       cout << "4. Display the maximum mark\n";
+       cout << "5. Exit\n";
+       cout << "Enter your choice: ";
+       cin >> choice;
+ 
+       switch (choice) {
+           case 1:
+               cout << "Enter the mark to insert: ";
+               cin >> value;
+               root = insert(root, value); 
+               break;
+ 
+           case 2:
+               cout << "Marks in Ascending Order: ";
+               printInOrder(root);  
+               cout << "\n";
+               break;
+ 
+           case 3:
+               if (root) {
+                   cout << "Minimum Mark: " << findMin(root) << endl; 
+               } else {
+                   cout << "The tree is empty.\n";
+               }
+               break;
+ 
+           case 4:
+               if (root) {
+                   cout << "Maximum Mark: " << findMax(root) << endl; 
+               } else {
+                   cout << "The tree is empty.\n";
+               }
+               break;
+ 
+           case 5:
+               cout << "Exiting...\n";
+               break;
+ 
+           default:
+               cout << "Invalid choice. Please try again.\n";
+       }
+   } while (choice != 5); 
+ 
+   return 0;
+}
