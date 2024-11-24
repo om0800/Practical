@@ -1,0 +1,98 @@
+#include <iostream>
+using namespace std;
+ 
+struct Node {
+   int data;
+   Node* left;
+   Node* right;
+};
+ 
+Node* createNode(int data) {
+   Node* newNode = new Node();
+   newNode->data = data;
+   newNode->left = newNode->right = nullptr;
+   return newNode;
+}
+ 
+Node* insert(Node* root, int data) {
+   if (!root) return createNode(data);
+ 
+   if (data < root->data)
+       root->left = insert(root->left, data);
+   else
+       root->right = insert(root->right, data);
+ 
+   return root;
+}
+ 
+void inorder(Node* root) {
+   if (!root) return;
+   inorder(root->left);
+   cout << root->data << " ";
+   inorder(root->right);
+}
+ 
+void preorder(Node* root) {
+   if (!root) return;
+   cout << root->data << " ";
+   preorder(root->left);
+   preorder(root->right);
+}
+ 
+void postorder(Node* root) {
+   if (!root) return;
+   postorder(root->left);
+   postorder(root->right);
+   cout << root->data << " ";
+}
+ 
+int main() {
+   Node* root = nullptr;  
+   int choice, value;
+ 
+   do {
+       cout << "\nBinary Search Tree Operations:\n";
+       cout << "1. Insert a new mark\n";
+       cout << "2. Display marks in Preorder\n";
+       cout << "3. Display marks in Inorder\n";
+       cout << "4. Display marks in Postorder\n";
+       cout << "5. Exit\n";
+       cout << "Enter your choice: ";
+       cin >> choice;
+ 
+       switch (choice) {
+           case 1:
+               cout << "Enter the mark to insert: ";
+               cin >> value;
+               root = insert(root, value); 
+               break;
+ 
+           case 2:
+               cout << "Preorder Traversal: ";
+               preorder(root);  
+               cout << "\n";
+               break;
+ 
+           case 3:
+               cout << "Inorder Traversal: ";
+               inorder(root);   
+               cout << "\n";
+               break;
+ 
+           case 4:
+               cout << "Postorder Traversal: ";
+               postorder(root);
+               cout << "\n";
+               break;
+ 
+           case 5:
+               cout << "Exiting...\n";
+               break;
+ 
+           default:
+               cout << "Invalid choice. Please try again.\n";
+       }
+   } while (choice != 5); 
+ 
+   return 0;
+}
