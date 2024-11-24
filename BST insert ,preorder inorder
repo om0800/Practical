@@ -1,0 +1,116 @@
+#include <iostream>
+using namespace std;
+ 
+// Node structure for the binary tree
+struct Node {
+   int data;
+   Node* left;
+   Node* right;
+};
+ 
+// Function to create a new node
+Node* createNode(int data) {
+   Node* newNode = new Node();
+   newNode->data = data;
+   newNode->left = newNode->right = nullptr;
+   return newNode;
+}
+ 
+// Function to insert a new node into the binary tree
+Node* insert(Node* root, int data) {
+   // If the tree is empty, create the root node
+   if (!root) return createNode(data);
+   
+   // Otherwise, recursively insert the node in the left or right subtree
+   if (data < root->data) {
+       root->left = insert(root->left, data);
+   } else {
+       root->right = insert(root->right, data);
+   }
+   
+   return root; // Return the unchanged root pointer
+}
+ 
+// Function to perform inorder traversal (Left, Root, Right)
+void inorder(Node* root) {
+   if (root == nullptr) return; // If the tree is empty, return
+   
+   inorder(root->left); // Visit left subtree
+   cout << root->data << " "; // Print root node
+   inorder(root->right); // Visit right subtree
+}
+ 
+// Function to perform preorder traversal (Root, Left, Right)
+void preorder(Node* root) {
+   if (root == nullptr) return; // If the tree is empty, return
+   
+   cout << root->data << " "; // Print root node
+   preorder(root->left); // Visit left subtree
+   preorder(root->right); // Visit right subtree
+}
+ 
+// Function to display leaf nodes (nodes with no left or right children)
+void displayLeafNodes(Node* root) {
+   if (root == nullptr) return; // If the tree is empty, return
+   
+   // If the node is a leaf (both left and right children are null), print it
+   if (!root->left && !root->right) {
+       cout << root->data << " ";
+       return;
+   }
+   
+   displayLeafNodes(root->left); // Visit left subtree
+   displayLeafNodes(root->right); // Visit right subtree
+}
+ 
+int main() {
+   Node* root = nullptr;
+   int choice, value;
+ 
+   do {
+       // Menu for user interaction
+       cout << "\nBinary Tree Operations:\n";
+       cout << "1. Insert a node\n";
+       cout << "2. Display tree (Inorder Traversal)\n";
+       cout << "3. Display tree (Preorder Traversal)\n";
+       cout << "4. Display leaf nodes\n";
+       cout << "5. Exit\n";
+       cout << "Enter your choice: ";
+       cin >> choice;
+ 
+       switch (choice) {
+           case 1:
+               cout << "Enter value to insert: ";
+               cin >> value;
+               root = insert(root, value); // Insert the new node
+               break;
+ 
+           case 2:
+               cout << "Inorder Traversal: ";
+               inorder(root); // Display tree in inorder
+               cout << "\n";
+               break;
+ 
+           case 3:
+               cout << "Preorder Traversal: ";
+               preorder(root); // Display tree in preorder
+               cout << "\n";
+               break;
+ 
+           case 4:
+               cout << "Leaf Nodes: ";
+               displayLeafNodes(root); // Display leaf nodes
+               cout << "\n";
+               break;
+ 
+           case 5:
+               cout << "Exiting...\n";
+               break;
+ 
+           default:
+               cout << "Invalid choice. Please try again.\n";
+       }
+   } while (choice != 5);
+ 
+   return 0;
+}
