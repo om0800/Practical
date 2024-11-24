@@ -1,0 +1,135 @@
+//11
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+class Node {
+public:
+    char data;
+    Node* left;
+    Node* right;
+    Node(char val) {
+        data = val;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+class Stack {
+private:
+    static const int MAX_SIZE = 100; 
+    Node* arr[MAX_SIZE];           
+    int top;                       
+
+public:
+    Stack() : top(-1) {}           
+
+    void push(Node* treeNode) {
+        if (top >= MAX_SIZE - 1) {
+            cout << "Stack Overflow" << endl;
+            return;
+        }
+        arr[++top] = treeNode;
+    }
+
+    Node* pop() {
+        if (isEmpty()) {
+            cout << "Stack Underflow" << endl;
+            return nullptr;
+        }
+        return arr[top--];
+    }
+
+    bool isEmpty() const {
+        return top == -1;
+    }
+};
+
+class ExpressionTree {
+public:
+    Node* buildTree(const string& prefix) {
+        Stack stk;
+        for (int i = prefix.length() - 1; i >= 0; --i) {
+            char current = prefix[i];
+            if (isspace(current)) {
+                continue;  // Skip whitespace
+            }
+            if (isOperator(current)) {
+                Node* left = stk.pop();
+                Node* right = stk.pop();
+                if (!left || !right) {
+                    cerr << "Error: Invalid prefix expression." << endl;
+                    return nullptr;
+                }
+                Node* operatorNode = new Node(current);
+                operatorNode->left = left;
+                operatorNode->right = right;
+                stk.push(operatorNode);
+            }
+            else if (isalpha(current)) {
+                stk.push(new Node(current));
+            }
+            else {
+                cerr << "Error: Invalid character '" << current << "' in expression." << endl;
+                return nullptr;
+            }
+        }
+        return stk.pop();
+    }
+
+    void inorder(Node* root) const {
+        if (root == nullptr)
+            return;
+        inorder(root->left);
+        cout << root->data << ' ';
+        inorder(root->right);
+    }
+
+    void preorder(Node* root) const {
+        if (root == nullptr)
+            return;
+        cout << root->data << ' ';
+        preorder(root->left);
+        preorder(root->right);
+    }
+
+    void postorder(Node* root) const {
+        if (root == nullptr)
+            return;
+        postorder(root->left);
+        postorder(root->right);
+        cout << root->data << ' ';
+    }
+
+private:
+    bool isOperator(char c) const {
+        return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+    }
+};
+
+int main() {
+    string prefixExpr;
+    cout << "Enter a prefix expression (e.g., +A*BC): ";
+    cin >> prefixExpr;
+
+    ExpressionTree et;
+    Node* root = et.buildTree(prefixExpr);
+    if (root == nullptr) {
+        cerr << "Failed to construct the expression tree due to invalid input." << endl;
+        return 1;
+    }
+
+    cout << "\nTraversals of the Expression Tree:\n";
+    cout << "Inorder (Infix): ";
+    et.inorder(root);
+    cout << endl;
+    cout << "Preorder (Prefix): ";
+    et.preorder(root);
+    cout << endl;
+    cout << "Postorder (Postfix): ";
+    et.postorder(root);
+    cout << endl;
+
+    return 0;
+}
